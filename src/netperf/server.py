@@ -7,29 +7,19 @@ class TcpPerfHandler(socketserver.BaseRequestHandler):
 
     def handle(self):
         sdatetime = str(datetime.datetime.now())
-        print("{} Client connect from {}".format(sdatetime, self.request.getpeername()[0]))
+        print("{} Client connect from {}".format(sdatetime, self.request.getpeername()))
         total = 0
-        stime = time.time()
-        last_print_time = stime
+        count = 0
+        stime = time.clock()
         while True:
-            data = self.request.recv(40960)
-            if not data:
+            size = len(self.request.recv(65536))
+            if not size:
                 break
-            total += len(data)
-            now_time = time.time()
-            if now_time - last_print_time > 10:
-                print("{} Got {:.2f} MB from client {} since {}, Avg speed is {:.2f} MB/s".format(
-                    str(datetime.datetime.now()),
-                    total/1024/1024,
-                    self.request.getpeername()[0],
-                    sdatetime,
-                    total/1024/1024/(now_time - stime)
-                ))
-                last_print_time = now_time
-        now_time = time.time()
+            total += size
+        now_time = time.clock()
         print("{} Client {} closed. It sent {:.2f} MB since {}, Avg speed is {:.2f} MB/s".format(
             str(datetime.datetime.now()),
-            self.request.getpeername()[0],
+            self.request.getpeername(),
             total/1024/1024,
             sdatetime,
             total/1024/1024/(now_time - stime),

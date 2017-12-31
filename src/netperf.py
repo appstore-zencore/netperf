@@ -1,7 +1,7 @@
 import click
 from netperf.server import start_tcp_server
 from netperf.server import start_udp_server
-
+from netperf.client import run_tcp_test
 
 
 @click.group()
@@ -21,15 +21,14 @@ def server(port, protocol):
 
 @app.command()
 @click.option("-s", "--server")
-@click.option("-p", "--port")
+@click.option("-p", "--port", type=int, default=5001)
 @click.option("-P", "--protocol", default="tcp")
-@click.option("-t", "--time", type=int, default=0)
+@click.option("-t", "--time", type=int, default=60)
 def client(server, port, protocol, time):
     if protocol.lower() == "udp":
-        client = UdpClient(server, port)
+        pass
     else:
-        client = TcpClient(server, port)
-    client.perf(time)
+        run_tcp_test(server, port, time)
 
 
 if __name__ == "__main__":

@@ -16,7 +16,7 @@ class TcpPerfHandler(socketserver.BaseRequestHandler):
                 break
             total += size
         now_time = time.clock()
-        print("{} Client {} closed. It sent {:.2f} MB in {:.2f} seconds, Avg speed is {:.2f} Mbits/s".format(
+        print("{} Client {} closed. It sent {:.2f} MB in {:.2f} seconds, Avg speed is {:.2f} MBytes/s".format(
             str(datetime.datetime.now()),
             self.request.getpeername(),
             total/1024/1024,
@@ -32,10 +32,9 @@ def start_tcp_server(port):
 
 class UdpPerfHandler(socketserver.BaseRequestHandler):
     def handle(self):
-        print(self.request)
-        print(dir(self.request[1]))
-        print(self.request[1].getsockname())
+        pass
+
 
 def start_udp_server(port):
-    with socketserver.ThreadingUDPServer(('0.0.0.0', port), UdpPerfHandler) as server:
+    with socketserver.UDPServer(('0.0.0.0', port), UdpPerfHandler) as server:
         server.serve_forever()
